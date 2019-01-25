@@ -34,4 +34,3 @@ Diagonal: 0.018747680326878707
 Time: 33.562
 
 thanks
-Mehdi YAdollahi
