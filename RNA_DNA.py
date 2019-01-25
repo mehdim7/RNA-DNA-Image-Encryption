@@ -1,7 +1,7 @@
 '''
 Image Encryption
 Combination RNA and DNA and Logistic map
-CopyRight Mehdi Yadollahi  January 5, 2019'''
+CopyRight mehdim7 January 5, 2019'''
 import random
 import cv2
 import numpy as np
