@@ -1,7 +1,7 @@
 '''
 Image Encryption
 Combination RNA and DNA and Logistic map
-CopyRight mehdim7 January 5, 2019'''
+CopyRight Mehdi Yadollahi  January 5, 2019'''
 import random
 import cv2
 import numpy as np
@@ -328,7 +328,7 @@ class DataSet:
         self.path=path
         self.filePass='.bmp'
 
-    def getDataSetPath(self,dataSetName,filepass='.bmp'):
+    def getDataSetPath(self,dataSetName,filepass='.jpg'):
         return self.path+self.images[dataSetName]+filepass
 
     def getDataSetFinalPath(self,dataSetName):
@@ -380,7 +380,9 @@ class AnalyzeImage:
 
         self.key2 = self.getNextKey(self.key)
         run = ImageCrypt(self.imgSource, self.dataSets.getDataSetFinalPathKeyChange(dataSetName), self.key2)
-        infoFile.write('\nKey Sensivity: ' + str(self.keySensitivityImage(dataSetName)))
+
+        count, countPercent =self.keySensitivityImage(dataSetName)
+        infoFile.write('\nKey Sensivity: ' + str(count)+' , '+ str(round(countPercent,2)))
         self.NPCRUACI(dataSetName, infoFile)
         self.Correlation()
 
@@ -394,7 +396,7 @@ class AnalyzeImage:
         matrixX2,matrixY2=self.getCorrelation(self.imgRNAFinal, 1, 0)
         self.infoFile.write('\nCorrelation Coefficient:')
         corHorizontal = np.corrcoef(matrixX2, matrixY2)
-        self.infoFile.write('\nHorizontal: ' + str(corHorizontal[1, 0]))
+        self.infoFile.write('\nHorizontal: ' + str(round(corHorizontal[1, 0],4)))
 
         matplotlib.style.use('ggplot')
         plt.subplot(122), plt.scatter(matrixX2, matrixY2,c='blue', alpha=0.5), plt.title('Horizontal')
@@ -406,7 +408,7 @@ class AnalyzeImage:
         matrixX2, matrixY2 = self.getCorrelation(self.imgRNAFinal, 0, 1)
 
         corVertical = np.corrcoef(matrixX2, matrixY2)
-        self.infoFile.write('\nVertical: ' + str(corVertical[1, 0]))
+        self.infoFile.write('\nVertical: ' + str(round(corVertical[1, 0],4)))
 
         matplotlib.style.use('ggplot')
         plt.subplot(122), plt.scatter(matrixX2, matrixY2,c='blue', alpha=0.5), plt.title('Vertical')
@@ -417,7 +419,7 @@ class AnalyzeImage:
         matrixX2, matrixY2 = self.getCorrelation(self.imgRNAFinal, 1, 1)
 
         corDiagonal = np.corrcoef(matrixX2, matrixY2)
-        self.infoFile.write('\nDiagonal: ' + str(corDiagonal[1,0]))
+        self.infoFile.write('\nDiagonal: ' + str(round(corDiagonal[1,0],4)))
 
         matplotlib.style.use('ggplot')
         plt.subplot(122), plt.scatter(matrixX2, matrixY2,c='blue', alpha=0.5), plt.title('Diagonal')
@@ -439,8 +441,8 @@ class AnalyzeImage:
 
         random.seed(1)
         for i in range(self.correlationcCount):
-            rx=random.randint(0,maxCol-1)
-            ry=random.randint(0,maxRow-1)
+            rx=random.randint(0,maxRow-2)
+            ry=random.randint(0,maxCol-2)
             matrixX.append(img[rx,ry])
             matrixY.append(img[rx+x,ry+y])
 
@@ -478,7 +480,7 @@ class AnalyzeImage:
                     sensitivityImage[i, j] = 0
 
         cv2.imwrite(self.dataSets.getDataSetFinalPathKeyChangeResult(dataSetName, count), sensitivityImage)
-        return count
+        return count,((1-(count/(rows*cols)))*100)
 
     def NPCRUACI(self, dataSetName, infoFile):
         img1 = cv2.imread(self.dataSets.getDataSetPath(dataSetName), cv2.IMREAD_GRAYSCALE)
@@ -489,8 +491,8 @@ class AnalyzeImage:
         NPCR1, UACI1 = self.getEachNPCRUACI(self.dataSets.getDataSetFinalPath(dataSetName),
                                         self.dataSets.getDataSetFinalPathUACI1(dataSetName))
         infoFile.write('\nFirst Pixcel: ')
-        infoFile.write('\nNPCR: ' + str(NPCR1))
-        infoFile.write('\nUACI: ' + str(UACI1))
+        infoFile.write('\nNPCR: ' + str(round(NPCR1,6)))
+        infoFile.write('\nUACI: ' + str(round(UACI1,6)))
 
         img2 = cv2.imread(self.dataSets.getDataSetPath(dataSetName), cv2.IMREAD_GRAYSCALE)
         img2[int(rows / 2), int(cols / 2)] = self.getNextPixcel(img2[int(rows / 2), int(cols / 2)])
@@ -499,8 +501,8 @@ class AnalyzeImage:
         NPCR2, UACI2 = self.getEachNPCRUACI(self.dataSets.getDataSetFinalPath(dataSetName),
                                         self.dataSets.getDataSetFinalPathUACI2(dataSetName))
         infoFile.write('\nMidle Pixcel: ')
-        infoFile.write('\nNPCR: ' + str(NPCR2))
-        infoFile.write('\nUACI: ' + str(UACI2))
+        infoFile.write('\nNPCR: ' + str(round(NPCR2,6)))
+        infoFile.write('\nUACI: ' + str(round(UACI2,6)))
 
         img3 = cv2.imread(self.dataSets.getDataSetPath(dataSetName), cv2.IMREAD_GRAYSCALE)
         img3[rows - 1, cols - 1] = self.getNextPixcel(img2[rows - 1, cols - 1])
@@ -509,15 +511,15 @@ class AnalyzeImage:
         NPCR3, UACI3 = self.getEachNPCRUACI(self.dataSets.getDataSetFinalPath(dataSetName),
                                         self.dataSets.getDataSetFinalPathUACI3(dataSetName))
         infoFile.write('\nLast Pixcel: ')
-        infoFile.write('\nNPCR: ' + str(NPCR3))
-        infoFile.write('\nUACI: ' + str(UACI3))
+        infoFile.write('\nNPCR: ' + str(round(NPCR3,6)))
+        infoFile.write('\nUACI: ' + str(round(UACI3,6)))
 
         NPCR4 = (NPCR1 + NPCR2 + NPCR3) / 3
         UACI4 = (UACI1 + UACI2 + UACI3) / 3
 
         infoFile.write('\nAverage: ')
-        infoFile.write('\nNPCR: ' + str(NPCR4))
-        infoFile.write('\nUACI: ' + str(UACI4))
+        infoFile.write('\nNPCR: ' + str(round(NPCR4,6)))
+        infoFile.write('\nUACI: ' + str(round(UACI4,6)))
 
     def getEachNPCRUACI(self, imgPath1, imgPath2):
         img1 = cv2.imread(imgPath1, cv2.IMREAD_GRAYSCALE)
@@ -576,14 +578,10 @@ class ProposedAlgorithm:
 # key for image encryption
 key='Ì¼ÆN²ÜYTö,¡Ä'          # 128 bit ( 16 char)
 # Name of DataSets
-dataSets={'Baboon256':'Baboon256','Baboon512':'Baboon512'
-          ,'Boat256':'Boat256','Boat512':'Boat512',
-          'forest256':'forest256','forest512':'forest512',
-          'Jetplane256':'Jetplane256','Jetplane512':'Jetplane512',
-          'Painter256':'Painter256','Painter512':'Painter512',
-          'peppers256':'peppers256','peppers512':'peppers512',
-          'Cameraman256':'Cameraman256','Cameraman512':'Cameraman512',
-          'lena256':'lena256','lena512':'lena512',}
+dataSets={'10':'10','11':'11','12':'12','13':'13','14':'14','15':'15'
+    ,'16': '16','17':'17','18':'18','19':'19'}
+
+
 # DataSet Directory Path
 path='D:/RNA/'
 p=ProposedAlgorithm(dataSets,key)
