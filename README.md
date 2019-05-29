@@ -1,5 +1,7 @@
 # RNA-DNA-Image-Encryption
-This project relates to an article written in this regard. Here's abstract of this article:
+This project relates to an article written in this regard. Here are title and abstract of this article:
+
+title: Acid based Medical Image Encryption Signal Processing
 
 abstract:
 Image encryption is very important to protect from any unauthorized user access. In this paper a two-phase secure image encryption has been proposed using the concepts of Deoxyribonucleic acid (DNA) and Ribonucleic acid (RNA). First, the plain image is encrypted based on DNA rules, DNA XOR operator, and chaotic map function in DNA phase and initial cipher image is created. Next, the cipher image is used as the input of RNA phase so that codons truth table for RNA and secret key are exploited for further image encryption. The results prove the superiority of the proposed method against state of the arts. Furthermore, the proposed method has high resistance against common attacks in the field and achieved entropy of 7.9997. 
